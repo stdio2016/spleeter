@@ -527,6 +527,13 @@ class EstimatorSpecBuilder(object):
             eval_metric_ops=metrics,
         )
 
+    def build_for_attack(self):
+        if 'audio_id' in self._features:
+            self.model_outputs['audio_id'] = self._features['audio_id']
+        return tf.estimator.EstimatorSpec(
+            tf.estimator.ModeKeys.PREDICT,
+            predictions=self.model_outputs)
+
 
 def model_fn(features, labels, mode, params, config):
     """
@@ -541,6 +548,8 @@ def model_fn(features, labels, mode, params, config):
     """
     builder = EstimatorSpecBuilder(features, params)
     if mode == tf.estimator.ModeKeys.PREDICT:
+        if "attack" in params:
+            return builder.build_for_attack()
         return builder.build_predict_model()
     elif mode == tf.estimator.ModeKeys.EVAL:
         return builder.build_evaluation_model(labels)

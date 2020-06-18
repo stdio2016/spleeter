@@ -104,9 +104,14 @@ class Separator(object):
         if not waveform.shape[-1] == 2:
             waveform = to_stereo(waveform)
         predictor = self._get_predictor()
-        prediction = predictor({
-            'waveform': waveform,
-            'audio_id': audio_descriptor})
+        if "attack" in self._params:
+            prediction = predictor({
+                'mix_spectrogram': waveform,
+                'audio_id': audio_descriptor})
+        else:
+            prediction = predictor({
+                'waveform': waveform,
+                'audio_id': audio_descriptor})
         prediction.pop('audio_id')
         return prediction
 
