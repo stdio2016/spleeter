@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', required=True, help='input audio filename')
 parser.add_argument('-o', '--output', required=True, help='output audio filename')
 parser.add_argument('-p', '--params_filename', default='spleeter:4stems', help='model to attack')
+parser.add_argument('--rms', type=float, default=0.01, help='attack strength')
 args = parser.parse_args()
 
 filename = args.input
@@ -83,7 +84,7 @@ with predictor.graph.as_default():
     m = 0
     M0 = 200
     gamma = 1
-    perturb_allowance = 0.01
+    perturb_allowance = args.rms
     X0 = spectrogram_np
     X = spectrogram_np.copy()
 
