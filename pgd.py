@@ -154,7 +154,8 @@ with predictor.graph.as_default():
         # project to perturbation bound
         r_part *= np.clip(avg_mag * perturb_allowance / (r_amp + 1e-7), -1, 1).reshape((-1,1))
         r = r_part.reshape((-1, n_bin, n_ch))
-        r = r[:-n_pad]
+        if n_pad > 0:
+            r = r[:-n_pad]
         r = r.reshape((X.shape[0], X.shape[1], n_bin, n_ch))
 
         X_next = X0 + r
